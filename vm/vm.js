@@ -39,6 +39,7 @@ const OP = {
   PROPSET: 21,
   TRY: 22,
   THROW: 23,
+  NOP: 24,
 
   // Comparisons
   COMP_EQUAL: 50,
@@ -68,6 +69,9 @@ class VM {
       this.atob = window.atob;
     } catch(e) {}
 
+    this.ops[OP.NOP] = function(vm) {
+        // no instruction
+    };
     this.ops[OP.LOAD_STRING] = function(vm) {
       var dst = vm.getByte(), str = vm._loadString();
       vm.setReg(dst, str);
@@ -359,7 +363,7 @@ class VM {
   }
 
   _decodeBytecode(encodedBytecode) {
-    var bytecode = this.atob(encodedBytecode);
+    var bytecode = atob(encodedBytecode);
     var bytes = [];
     var byteCounter = 0;
     for (var i = 0; i < bytecode.length; i++){
